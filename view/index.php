@@ -62,6 +62,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="./index2.php">Configuração</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="./terminal.php" target=”_blank”>Terminal</a>
+                        </li>
                     </ul>
                 </div>
             </div>
