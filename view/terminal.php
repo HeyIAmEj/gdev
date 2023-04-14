@@ -2,6 +2,8 @@
 /* phpbash by Alexander Reid (Arrexel) */
 
 /* 
+    sudo apt install php php-sqlite3 -y
+    sudo systemctl restart apache2
     Para rodar comandos sudo, adicionar arquivo www-data em /etc/sudoers.d/ 
     conteúdo do arquivo:
     wwww-data        ALL=(ALL) NOPASSWD: ALL

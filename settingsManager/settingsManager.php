@@ -14,12 +14,12 @@ class SettingsManager
     public function addSettings($settings)
     {
         if (!empty($this->getSettings())) {
-            return false;
+            $this->updateSettings($settings);
         }
         try {
             $statement = $this->db->prepare(
                 'INSERT INTO "settings" ("hosts_path", "glpi_local_url", "glpis_path", "current_glpi_version", "gh_user", "gh_token")
-             VALUES (:sudo_password, :hosts_path, :glpi_local_url, :glpis_path, :current_glpi_version, :gh_user, :gh_token)'
+             VALUES (:hosts_path, :glpi_local_url, :glpis_path, :current_glpi_version, :gh_user, :gh_token)'
             );
 
             $statement->execute([
@@ -28,12 +28,12 @@ class SettingsManager
                 'glpis_path' => $settings['glpis_path'] ?? null,
                 'current_glpi_version' => $settings['current_glpi_version'] ?? null,
                 'gh_user' => $settings['gh_user'] ?? null,
-                'gh_token' => $settings['gh_token'] ?? null,
+                'gh_token' => $settings['gh_token'] ?? null
             ]);
 
             return true;
         } catch (PDOException $e) {
-            exit($e->getMessage());
+            return false;
         }
         return false;
     }
@@ -64,12 +64,12 @@ class SettingsManager
                 'glpis_path' => $settings['glpis_path'] ?? null,
                 'current_glpi_version' => $settings['current_glpi_version'] ?? null,
                 'gh_user' => $settings['gh_user'] ?? null,
-                'gh_token' => $settings['gh_token'] ?? null,
+                'gh_token' => $settings['gh_token'] ?? null
             ]);
             $statement->rowCount();
             return true;
         } catch (PDOException $e) {
-            exit($e->getMessage());
+            return false;
         }
         return false;
     }

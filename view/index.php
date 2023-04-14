@@ -29,6 +29,13 @@
         }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -60,7 +67,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="./index2.php">Configuração</a>
+                            <a class="nav-link" data-bs-toggle="modal" data-bs-target="#settingsModal" href="#settingsModal">Configuração</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="./terminal.php" target=”_blank”>Terminal</a>
@@ -104,6 +111,36 @@
         </div>
     </main>
 
+    <!-- Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="settingsModalLabel">Configurações de sistema</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label>Caminho completo do arquivo hosts</label>
+                            <input type="text" class="form-control" name="hosts_path" placeholder="/etc/hosts">
+                            <label>Url para acessar o GLPI localmente</label>
+                            <input type="text" class="form-control" name="glpi_local_url" placeholder="glpi.local">
+                            <label>Diretório para instalar o(s) GLPI(s)</label>
+                            <input type="text" class="form-control" name="glpis_path" placeholder="/var/www/html">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" form="settingsForm" class="btn btn-success">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer mt-auto py-3 bg-dark">
         <div class="container-fluid d-flex justify-content-between">
             <span class="text-muted">Ferramenta para desenvolvedores GLPI</span>
@@ -127,5 +164,37 @@
 
     <script src="./assets/lib/js/bootstrap.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
+
+<script>
+    function submitSettings(settings) {
+        console.log(settings);
+        let url = '../system/configure.php';
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(settings)
+        }).then(response => response.json().then(res => {
+            toastr.success(res.message, 'Sucesso!', {
+                timeOut: 1000,
+                progressBar: true,
+                onHidden: () => {
+                }
+            });
+        })).catch(error => {
+            toastr.error("Erro ao salvar configurações", error.message);
+        });
+    }
+
+
+    let form = document.getElementById('settingsForm');
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        let settings = {
+            "hosts_path": form.hosts_path.value,
+            "glpi_local_url": form.glpi_local_url.value,
+            "glpis_path": form.glpis_path.value,
+        };
+        submitSettings(settings);
+    });
+</script>
 
 </html>
